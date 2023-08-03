@@ -61,6 +61,11 @@ class IntSpinbox(customtkinter.CTkFrame):
     def subtract_button_callback(self):
         if self.command is not None:
             self.command()
+        if self.entry.get() == "":
+            self.entry.insert(0, 0)
+            return
+        if int(self.entry.get()) <= 0:
+            return
         try:
             value = int(self.entry.get()) - self.step_size
             self.entry.delete(0, "end")
@@ -120,6 +125,7 @@ class IntSpinbox(customtkinter.CTkFrame):
                 if event.is_set():
                     return
         while True:
+
             callback()
             time.sleep(.1)
             if event.is_set():

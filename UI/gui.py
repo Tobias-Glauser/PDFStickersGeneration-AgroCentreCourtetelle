@@ -1,4 +1,5 @@
 import os.path
+from threading import Thread
 
 import customtkinter
 from customtkinter import filedialog
@@ -22,6 +23,7 @@ class App(customtkinter.CTk):
         self.geometry("500x480")
         self.title("Sticker - AGROCENTRE & KILOMETRE ZERO")
         self.iconbitmap("UI/assets/icon.ico")
+        self.thread = None
         # self.resizable(False, False)
 
         # self.grid_rowconfigure(0, weight=1)
@@ -57,6 +59,9 @@ class App(customtkinter.CTk):
         self.button.grid(row=3, column=0, columnspan=1, padx=10, pady=10)
 
     def generate_sticker(self, sticker_frame):
+        if self.thread is not None and self.thread.is_alive():
+            CTkMessagebox(title="Error", message="Il y a dejà un sticker en cours de création", icon="cancel")
+            return
         sticker_frame.get_data()
 
         if not sticker_frame.sticker.is_valid():
@@ -109,7 +114,8 @@ class App(customtkinter.CTk):
         progress_bar = StickerGenProgressBar(self, width=50)
         progress_bar.grid(row=4, column=0, columnspan=1, padx=10, pady=10, sticky="ew")
         self.update()
-        sticker_frame.sticker.generate(save_file_path, progress_bar.set_state, progress_bar.destroy, stickers_left=stickers_left, total_stickers=total_stickers)
+        self.thread = Thread(target=sticker_frame.sticker.generate, args=(save_file_path, progress_bar.set_state, progress_bar.destroy), kwargs={"stickers_left": stickers_left, "total_stickers": total_stickers})
+        self.thread.start()
 
 
 class StickerFrame(customtkinter.CTkScrollableFrame):
