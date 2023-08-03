@@ -1,0 +1,167 @@
+[
+  {
+    "name": "Sticker Aliment",
+    "align": "center",
+    "data": [
+      {
+        "name": "Nom aliment",
+        "inline_prefix": "",
+        "inline_suffix": "",
+        "block_prefix": "",
+        "block_suffix": "",
+        "font": "big_bold",
+        "suffix_font": "big_bold",
+        "prefix_font": "big_bold",
+        "type": "text"
+      },
+      {
+        "name": "Poids [kg]",
+        "inline_prefix": "",
+        "inline_suffix": " KG",
+        "block_prefix": "",
+        "block_suffix": "",
+        "font": "big_bold",
+        "suffix_font": "big_bold",
+        "prefix_font": "big_bold",
+        "type": "list",
+        "values": ["20", "25", "30", "35", "40", "45", "50"]
+      },
+      {
+        "name": "Type d'aliment",
+        "inline_prefix": "aliment ",
+        "inline_suffix": "",
+        "block_prefix": "",
+        "block_suffix": "",
+        "font": "normal",
+        "suffix_font": "normal",
+        "prefix_font": "normal",
+        "type": "list",
+        "values": ["simple", "composé"]
+      },
+      {
+        "name": "Date de mise en sac",
+        "inline_prefix": "",
+        "inline_suffix": "",
+        "block_prefix": "Date de mise en sac :",
+        "block_suffix": "",
+        "font": "normal",
+        "suffix_font": "normal",
+        "prefix_font": "normal",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "name": "Sticker Fourrage",
+    "align": "left",
+    "data": [
+      {
+        "name": "Client",
+        "inline_prefix": "",
+        "inline_suffix": "",
+        "block_prefix": "",
+        "block_suffix": "",
+        "font": "normal",
+        "suffix_font": "normal",
+        "prefix_font": "normal",
+        "type": "text"
+      },
+      {
+        "name": "Formule",
+        "inline_prefix": "",
+        "inline_suffix": "",
+        "block_prefix": "",
+        "block_suffix": "",
+        "font": "normal",
+        "suffix_font": "normal",
+        "prefix_font": "normal",
+        "type": "text"
+      },
+      {
+        "name": "Poids [kg]",
+        "inline_prefix": "",
+        "inline_suffix": " KG",
+        "block_prefix": "",
+        "block_suffix": "",
+        "font": "normal",
+        "suffix_font": "normal",
+        "prefix_font": "normal",
+        "type": "list",
+        "values": ["20", "25", "30", "35", "40", "45", "50"]
+      },
+      {
+        "name": "Date de mise en sac",
+        "inline_prefix": "",
+        "inline_suffix": "",
+        "block_prefix": "Date de mise en sac :",
+        "block_suffix": "",
+        "font": "normal",
+        "suffix_font": "normal",
+        "prefix_font": "normal",
+        "type": "date"
+      }
+    ]
+  },
+  {
+    "name": "Sticker Triage",
+    "align": "left",
+    "data": [
+      {
+        "name": "Client",
+        "inline_prefix": "",
+        "inline_suffix": "",
+        "block_prefix": "",
+        "block_suffix": "",
+        "font": "normal",
+        "suffix_font": "normal",
+        "prefix_font": "normal",
+        "type": "text"
+      },
+      {
+        "name": "Label",
+        "inline_prefix": "",
+        "inline_suffix": "",
+        "block_prefix": "",
+        "block_suffix": "",
+        "font": "normal",
+        "suffix_font": "normal",
+        "prefix_font": "normal",
+        "type": "text"
+      },
+      {
+        "name": "Produit",
+        "inline_prefix": "",
+        "inline_suffix": "",
+        "block_prefix": "",
+        "block_suffix": "",
+        "font": "normal",
+        "suffix_font": "normal",
+        "prefix_font": "normal",
+        "type": "text"
+      },
+      {
+        "name": "Poids [kg]",
+        "inline_prefix": "",
+        "inline_suffix": " KG",
+        "block_prefix": "",
+        "block_suffix": "",
+        "font": "bold",
+        "suffix_font": "bold",
+        "prefix_font": "normal",
+        "type": "list",
+        "values": ["20", "25", "30", "35", "40", "45", "50"]
+      },
+      {
+        "name": "Date de mise en sac",
+        "inline_prefix": "",
+        "inline_suffix": "",
+        "block_prefix": "Date de mise en sac :",
+        "block_suffix": "",
+        "font": "normal",
+        "suffix_font": "normal",
+        "prefix_font": "normal",
+        "type": "date"
+      }
+    ]
+  }
+]
