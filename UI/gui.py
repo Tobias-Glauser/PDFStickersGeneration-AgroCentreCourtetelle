@@ -1,4 +1,6 @@
 import os.path
+import time
+import win32print
 from threading import Thread
 
 import customtkinter
@@ -8,6 +10,7 @@ from CTkMessagebox import CTkMessagebox
 from UI.widgets.pdf_gen_progress_bar import StickerGenProgressBar
 from UI.widgets.IntSpinbox import IntSpinbox
 from sticker.sticker_data import StickerDataNumber, StickerDataText, StickerDataDate, StickerDataList
+from print.printer import Printer
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -26,6 +29,8 @@ class App(customtkinter.CTk):
         self.thread = None
         # self.resizable(False, False)
 
+        self.printer = Printer()
+
         # self.grid_rowconfigure(0, weight=1)
         # self.grid_columnconfigure((0, 1), weight=1)
 
@@ -43,6 +48,9 @@ class App(customtkinter.CTk):
                                                            dropdown_font=("Calibri", 24), width=280)
         self.combobox_stickers.grid(row=1, column=1, columnspan=1, padx=10, pady=10)
 
+        self.printer_choice_frame = PrinterChoiceFrame(self, self.set_printer)
+        self.printer_choice_frame.grid(row=5, column=0, columnspan=1, rowspan=1, sticky="nsew", padx=10, pady=10)
+
     def display_sticker(self, choice):
         if self.stickers.selected_sticker is not None and choice == self.stickers.selected_sticker.name:
             return
@@ -55,18 +63,42 @@ class App(customtkinter.CTk):
         self.sticker_frame = StickerFrame(self, self.stickers.selected_sticker)
         self.sticker_frame.grid(row=2, column=1, columnspan=1, rowspan=10, sticky="nsew", padx=10, pady=10)
 
-        self.button = customtkinter.CTkButton(self, text="Générer", command=lambda: self.generate_sticker(self.sticker_frame))
+        self.button = customtkinter.CTkButton(self, text="Générer", command=lambda: Thread(target=self.generate_sticker_callback, args=(self.sticker_frame,)).start())
         self.button.grid(row=3, column=0, columnspan=1, padx=10, pady=10)
 
-    def generate_sticker(self, sticker_frame):
+        self.button = customtkinter.CTkButton(self, text="Imprimer", command=lambda: Thread(target=self.print_sticker_callback, args=(self.sticker_frame,)).start())
+        self.button.grid(row=6, column=0, columnspan=1, padx=10, pady=10)
+
+    def generate_sticker_callback(self, sticker_frame):
+        result = self.generate_sticker(sticker_frame)
+        if result is False:
+            return
+
+        os.startfile(result)
+
+    def print_sticker_callback(self, sticker_frame):
+        filename = os.getcwd() + "\\tmp\\tmp_1.pdf"
+        while os.path.exists(filename):
+            print("File already exists")
+            number = (filename.split(".")[0]).split("_")[-1]
+            filename = filename.replace(number, str(int(number) + 1))
+        result = self.generate_sticker(sticker_frame, filename)
+        if result is False:
+            return
+
+        self.printer.print(result)
+        time.sleep(60)
+        os.remove(result)
+
+    def generate_sticker(self, sticker_frame, save_file_path=None):
         if self.thread is not None and self.thread.is_alive():
             CTkMessagebox(title="Error", message="Il y a dejà un sticker en cours de création", icon="cancel")
-            return
+            return False
         sticker_frame.get_data()
 
         if not sticker_frame.sticker.is_valid():
             CTkMessagebox(title="Erreur", message="Les champs ne sont pas tous remplis ou correctement remplis.", icon="cancel")
-            return
+            return False
 
         stickers_left, total_stickers = self.config_sticker_frame.get_data()
         if stickers_left == "" or stickers_left is None:
@@ -75,7 +107,7 @@ class App(customtkinter.CTk):
                                                              "nombre de stickers qui se trouvent sur une page",
                                 icon="warning", option_1="Continuer", option_2="Annuler")
             if msg.get() == "Annuler":
-                return
+                return False
             else:
                 stickers_left = 0
         elif stickers_left > 24:
@@ -83,7 +115,7 @@ class App(customtkinter.CTk):
                                                              "êtes-vous sûr de vouloir continuer ?",
                                 icon="warning", option_1="Continuer", option_2="Annuler")
             if msg.get() == "Annuler":
-                return
+                return False
             else:
                 stickers_left = 0
 
@@ -93,29 +125,37 @@ class App(customtkinter.CTk):
                                                              "nombre de stickers qui se trouvent sur une page",
                                 icon="warning", option_1="Continuer", option_2="Annuler")
             if msg.get() == "Annuler":
-                return
+                return False
             else:
                 total_stickers = 24
 
         if total_stickers < 1:
             CTkMessagebox(title="Erreur", message="Le nombre de stickers désirés doit être supérieur à 0.", icon="cancel")
-            return
+            return False
 
         if stickers_left < 0:
             CTkMessagebox(title="Erreur", message="Le nombre de stickers restants doit être supérieur ou égal à 0.", icon="cancel")
-            return
+            return False
 
-        save_file_path = filedialog.asksaveasfilename(filetypes=[("PDF", "*.pdf")],
-                                                      defaultextension=".pdf",
-                                                      initialfile=sticker_frame.sticker.name + " 1.pdf")
+        if save_file_path is None:
+            save_file_path = filedialog.asksaveasfilename(filetypes=[("PDF", "*.pdf")],
+                                                          defaultextension=".pdf",
+                                                          initialfile=sticker_frame.sticker.name + " 1.pdf")
+
         if not os.path.exists(os.path.dirname(save_file_path)):
-            return
+            print(os.path.dirname(save_file_path))
+            return False
 
         progress_bar = StickerGenProgressBar(self, width=50)
         progress_bar.grid(row=4, column=0, columnspan=1, padx=10, pady=10, sticky="ew")
         self.update()
         self.thread = Thread(target=sticker_frame.sticker.generate, args=(save_file_path, progress_bar.set_state, progress_bar.destroy), kwargs={"stickers_left": stickers_left, "total_stickers": total_stickers})
         self.thread.start()
+        self.thread.join()
+        return save_file_path
+
+    def set_printer(self, value):
+        self.printer.set_printer(self.printer_choice_frame.get_printer())
 
 
 class StickerFrame(customtkinter.CTkScrollableFrame):
@@ -195,3 +235,19 @@ class ConfigStickerFrame(customtkinter.CTkFrame):
     def get_data(self):
         return self.stickers_left.get(), self.total_stickers.get()
 
+
+class PrinterChoiceFrame(customtkinter.CTkFrame):
+    def __init__(self, parent, command=None, **kwargs):
+        super().__init__(parent, **kwargs)
+
+        self.label_printer_choice = customtkinter.CTkLabel(self, text="Imprimante", font=("Calibri", 14))
+        self.label_printer_choice.pack(pady=0, padx=10, expand=False)
+        self.printer_choice = customtkinter.CTkComboBox(self, values=[p[2] for p in win32print.EnumPrinters(2)], font=("Calibri", 14), command=command)
+        self.printer_choice.pack(pady=(0, 10), padx=10)
+        self.printer_choice.set(win32print.GetDefaultPrinter())
+
+    def get_printer(self):
+        choice = self.printer_choice.get()
+        if choice in [p[2] for p in win32print.EnumPrinters(2)]:
+            return choice
+        return None

@@ -15,7 +15,6 @@ from UI.widgets.pdf_gen_progress_bar import StickerGenProgressBar
 
 
 class StickerGenerator:
-    thread = None
     fonts = {
         'normal': {
             'font': ImageFont.truetype("segoeui.ttf", 20),
@@ -41,25 +40,14 @@ class StickerGenerator:
         StickerGenerator.__generate_fonts_real_sizes()
 
     def generate_stickers(self, sticker, save_file_path, **kwargs):
-        if StickerGenerator.thread is not None and StickerGenerator.thread.is_alive():
-            raise Exception('Already generating a sticker')
-
         time.sleep(1.5)
         self.update_state_if_needed(StickerGenProgressBar.StickerProgressBarStates.GENERATING_IMG)
         sticker_img_path = StickerGenerator.create_sticker(sticker)
 
         self.state_callback(StickerGenProgressBar.StickerProgressBarStates.GENERATING_PDF)
-        StickerGenerator.thread = Thread(target=StickerGenerator.generate_pdf,
-                                         args=[self,
-                                               save_file_path,
-                                               sticker_img_path,
-                                               kwargs.get('stickers_left') or None,
-                                               kwargs.get('total_stickers') or None])
-        StickerGenerator.thread.start()
+        self.generate_pdf(save_file_path, sticker_img_path, **kwargs)
 
     def generate_pdf(self, save_file_path, sticker_img_path, stickers_left=24, total_stickers=24):
-        print(stickers_left, total_stickers)
-
         if total_stickers is None:
             total_stickers = 24
 
@@ -67,7 +55,6 @@ class StickerGenerator:
             stickers_left = 24
         elif 6 > stickers_left > 0:
             raise Exception('Not enough stickers left to print the page')
-
 
         file_existed = os.path.exists(save_file_path)
         now = datetime.now()
@@ -102,7 +89,6 @@ class StickerGenerator:
             for i in range(start_number,
                            start_number + total_stickers if total_stickers < 24 - start_number + 1 else 25):
                 data = [[_el if _el != i else img for _el in _ar] for _ar in data]
-                print(i, total_stickers)
                 total_stickers -= 1
 
             data = [["" if not isinstance(_el, Image) else img for _el in _ar] for _ar in data]
@@ -128,7 +114,6 @@ class StickerGenerator:
         os.remove(sticker_img_path)
         self.update_state_if_needed(StickerGenProgressBar.StickerProgressBarStates.DONE)
         time.sleep(0.5)
-        os.startfile(save_file_path)
         self.destroy_progress_bar_if_needed()
 
     def update_state_if_needed(self, state):
