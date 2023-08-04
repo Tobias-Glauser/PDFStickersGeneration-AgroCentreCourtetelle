@@ -9,6 +9,7 @@ from CTkMessagebox import CTkMessagebox
 
 from UI.widgets.pdf_gen_progress_bar import StickerGenProgressBar
 from UI.widgets.IntSpinbox import IntSpinbox
+from UI.widgets.date_picker import DatePicker
 from sticker.sticker_data import StickerDataNumber, StickerDataText, StickerDataDate, StickerDataList
 from print.printer import Printer
 
@@ -50,6 +51,9 @@ class App(customtkinter.CTk):
 
         self.printer_choice_frame = PrinterChoiceFrame(self, self.set_printer)
         self.printer_choice_frame.grid(row=5, column=0, columnspan=1, rowspan=1, sticky="nsew", padx=10, pady=10)
+
+        self.test = DatePicker(self)
+        self.test.grid(row=7, column=0, columnspan=1, padx=10, pady=10)
 
     def display_sticker(self, choice):
         if self.stickers.selected_sticker is not None and choice == self.stickers.selected_sticker.name:
