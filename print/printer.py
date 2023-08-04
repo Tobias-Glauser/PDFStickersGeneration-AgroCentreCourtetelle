@@ -6,7 +6,8 @@ import subprocess
 
 class Printer:
     def __init__(self, printer_name=None):
-        self.foxit_path = os.getcwd().replace("\\", "\\\\") + "\\\\FoxitReaderPortable\\\\FoxitReaderPortable.exe"
+        self.foxit_path = os.getcwd().replace("\\", "\\\\") + "\\\\PDF-XChangeViewerPortable\\\\PDF" \
+                                                              "-XChangeViewerPortable.exe"
         self.printer_name = None
         self.set_printer(printer_name)
 
@@ -19,9 +20,9 @@ class Printer:
     def print(self, file_path):
         script = "\"" + \
                  self.foxit_path + \
-                 "\" /t \"" + \
-                 file_path.replace("\\", "\\\\") + \
-                 "\" \"" + \
+                 "\" /printto:default=no \"" + \
                  self.printer_name + \
+                 "\" \"" + \
+                 file_path.replace("\\", "\\\\") + \
                  "\""
         subprocess.call(script, shell=True)
