@@ -1,10 +1,18 @@
 import json
+import os
 
 from UI.gui import App
 from sticker.stickers import Stickers
 from sticker.sticker_data import StickerDataNumber, StickerDataText, StickerDataDate, StickerDataList
 from sticker.sticker_type import StickerType
 
+
+def empty_tmp():
+    for file in os.scandir(os.getcwd() + "\\tmp"):
+        os.remove(file.path)
+
+
+empty_tmp()
 data = json.load(open('model/data.json', encoding='utf-8-sig'))
 print(data)
 
@@ -56,3 +64,4 @@ for sticker in data:
 
 app = App(stickers)
 app.mainloop()
+
