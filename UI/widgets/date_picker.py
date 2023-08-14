@@ -140,7 +140,7 @@ class DayPicker(customtkinter.CTkFrame):
             for day in week:
                 button = customtkinter.CTkButton(self, text=str(day.day), command=lambda date=day: self.command(date),
                                                  width=30, height=30,
-                                                 fg_color="#c20c20" if day.month != self.date.month else "#9c0c20",
-                                                 hover_color="#9c0c20" if day.month != self.date.month else "#c20c20")
+                                                 fg_color="#05a66b" if day.month != self.date.month else "#057450",
+                                                 hover_color="#057450" if day.month != self.date.month else "#05a66b")
                 button.grid(row=month.index(week) + 1, column=day.weekday(), padx=3, pady=3)
                 self.buttons.append(button)
