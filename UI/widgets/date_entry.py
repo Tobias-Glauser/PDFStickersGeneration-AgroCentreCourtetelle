@@ -21,12 +21,14 @@ class DateEntry(customtkinter.CTkFrame):
         self.date_picker = customtkinter.CTkButton(self, command=self.command_callback, text="", width=button_size, height=button_size, image=customtkinter.CTkImage(light_image=Image.open("UI/assets/date_picker.png"), size=(20, 20)))
         self.date_picker.grid(row=0, column=1, padx=(0, 0), pady=0)
 
-        print(self.date_picker.cget("width"))
-
     def command_callback(self):
         date = DatePicker.get_date()
-        self.entry.delete(0, "end")
-        self.entry.insert(0, date.strftime("%d/%m/%Y"))
+        if date is not None:
+            self.entry.delete(0, "end")
+            self.entry.insert(0, date.strftime("%d/%m/%Y"))
+
+    def get(self):
+        return self.entry.get()
 
 
 
