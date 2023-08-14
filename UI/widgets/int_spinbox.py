@@ -3,7 +3,6 @@ from typing import Callable, Union
 
 import customtkinter
 from threading import Thread, Event
-from multiprocessing import Process
 
 
 class IntSpinbox(customtkinter.CTkFrame):
@@ -24,7 +23,7 @@ class IntSpinbox(customtkinter.CTkFrame):
 
         self.configure(fg_color=("gray78", "gray28"))  # set frame color
 
-        self.grid_columnconfigure((0, 2), weight=0)  # buttons don't expand
+        self.grid_columnconfigure((0 | 2), weight=0)  # buttons don't expand
         self.grid_columnconfigure(1, weight=1)  # entry expands
 
         self.subtract_button = customtkinter.CTkButton(self, text="-", width=height - 6, height=height - 6,
@@ -83,24 +82,24 @@ class IntSpinbox(customtkinter.CTkFrame):
         self.entry.delete(0, "end")
         self.entry.insert(0, str(int(value)))
 
-    def on_press_add(self, event=None):
+    def on_press_add(self):
         self.event.clear()
         self.timer = Thread(target=self.mouse_hold, args=(self.event, self.add_button_callback))
         self.timer.start()
 
-    def on_press_substract(self, event=None):
+    def on_press_substract(self):
         self.event.clear()
         self.timer = Thread(target=self.mouse_hold, args=(self.event, self.subtract_button_callback))
         self.timer.start()
 
-    def on_release_substract(self, event=None):
+    def on_release_substract(self, _ignored):
         self.event.set()
         if self.holding:
             self.holding = False
         else:
             self.subtract_button_callback()
 
-    def on_release_add(self, event=None):
+    def on_release_add(self, _ignored):
         self.event.set()
         if self.holding:
             self.holding = False
@@ -108,7 +107,6 @@ class IntSpinbox(customtkinter.CTkFrame):
             self.add_button_callback()
 
     def mouse_hold(self, event, callback):
-        print("mouse hold")
         count = 0
         while count < 3:
             time.sleep(.1)
