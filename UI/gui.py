@@ -9,7 +9,6 @@ from CTkMessagebox import CTkMessagebox
 
 from UI.widgets.pdf_gen_progress_bar import StickerGenProgressBar
 from UI.widgets.IntSpinbox import IntSpinbox
-from UI.widgets.date_picker import DatePicker
 from sticker.sticker_data import StickerDataNumber, StickerDataText, StickerDataDate, StickerDataList
 from print.printer import Printer
 
