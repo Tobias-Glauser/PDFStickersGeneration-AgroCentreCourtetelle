@@ -83,8 +83,8 @@
         "inline_suffix": " KG",
         "block_prefix": "",
         "block_suffix": "",
-        "font": "normal",
-        "suffix_font": "normal",
+        "font": "big_bold",
+        "suffix_font": "big_bold",
         "prefix_font": "normal",
         "type": "list",
         "values": ["20", "25", "30", "35", "40", "45", "50"]
