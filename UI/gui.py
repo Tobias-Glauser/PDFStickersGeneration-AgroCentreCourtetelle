@@ -7,6 +7,7 @@ import customtkinter
 from customtkinter import filedialog
 from CTkMessagebox import CTkMessagebox
 
+from UI.widgets.date_entry import DateEntry
 from UI.widgets.pdf_gen_progress_bar import StickerGenProgressBar
 from UI.widgets.IntSpinbox import IntSpinbox
 from sticker.sticker_data import StickerDataNumber, StickerDataText, StickerDataDate, StickerDataList
@@ -184,7 +185,7 @@ class StickerFrame(customtkinter.CTkScrollableFrame):
             elif isinstance(data, StickerDataDate):
                 customtkinter.CTkLabel(self, text=data.name, font=("Calibri", 14)).pack(pady=0, padx=10, expand=False,
                                                                                         anchor="w")
-                entry = customtkinter.CTkEntry(self, placeholder_text=data.name, width=280, font=("Calibri", 14))
+                entry = DateEntry(self, placeholder_text=data.name, width=280, font=("Calibri", 14))
                 entry.pack(pady=(0, 10), padx=10)
                 self.entries.append({
                     'entry': entry,
