@@ -1,5 +1,6 @@
 import customtkinter
-from datetime import date as Date
+
+from datetime import date as date_lib
 from dateutil.relativedelta import relativedelta
 import calendar as cal
 
@@ -38,7 +39,9 @@ class DatePickerTopLevel(customtkinter.CTkToplevel):
         self.year_month_picker.pack(padx=10, pady=10)
         self.day_picker.pack(padx=10, pady=10)
 
-        self.today_button = customtkinter.CTkButton(self, text="Aujourd'hui", command=lambda : self.command_callback(Date.today()))
+        self.today_button = customtkinter.CTkButton(self,
+                                                    text="Aujourd'hui",
+                                                    command=lambda: self.command_callback(date_lib.today()))
         self.today_button.pack(padx=10, pady=10)
 
         self.grab_set()
@@ -50,7 +53,7 @@ class DatePickerTopLevel(customtkinter.CTkToplevel):
 
 class YearMonthPicker(customtkinter.CTkFrame):
 
-    def __init__(self, parent, start_date: Date = Date.today(), command=None, **kwargs):
+    def __init__(self, parent, start_date: date_lib = date_lib.today(), command=None, **kwargs):
         super().__init__(parent, **kwargs)
         self.date = start_date
         self.command = command
@@ -118,10 +121,10 @@ class DayPicker(customtkinter.CTkFrame):
             self.command = lambda ignored: None
         self.update(date)
 
-    def update(self, actual_date: Date = None):
+    def update(self, actual_date: date_lib = None):
         self.date = actual_date
         if actual_date is None:
-            self.date = Date.today()
+            self.date = date_lib.today()
         for button in self.buttons:
             button.destroy()
 
