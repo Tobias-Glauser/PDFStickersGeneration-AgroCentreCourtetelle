@@ -2,7 +2,6 @@ from datetime import datetime
 
 from sticker.sticker_data import StickerDataNumber, StickerDataText, StickerDataDate, StickerDataList
 from sticker.sticker_generation import StickerGenerator
-import os
 
 
 class StickerType:
