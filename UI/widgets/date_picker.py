@@ -41,6 +41,8 @@ class DatePickerTopLevel(customtkinter.CTkToplevel):
         self.today_button = customtkinter.CTkButton(self, text="Aujourd'hui", command=lambda : self.command_callback(Date.today()))
         self.today_button.pack(padx=10, pady=10)
 
+        self.grab_set()
+
     def command_callback(self, date):
         self.command(date)
         self.destroy()
