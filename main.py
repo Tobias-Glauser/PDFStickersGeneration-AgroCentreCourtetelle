@@ -1,5 +1,6 @@
 import json
 import os
+import locale
 
 from UI.gui import App
 from sticker.stickers import Stickers
@@ -11,6 +12,8 @@ def empty_tmp():
     for file in os.scandir(os.getcwd() + "\\tmp"):
         os.remove(file.path)
 
+
+locale.setlocale(locale.LC_TIME, '')
 
 empty_tmp()
 data = json.load(open('model/data.json', encoding='utf-8-sig'))
