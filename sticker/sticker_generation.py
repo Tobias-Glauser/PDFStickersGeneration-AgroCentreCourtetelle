@@ -214,7 +214,7 @@ class StickerGenerator:
             else:
                 text_y_coordinates += StickerGenerator.fonts[data.font]['real_size']
 
-            text_y_coordinates += 5
+            text_y_coordinates += 10
 
         sticker_path = os.path.join(os.getcwd(), "tmp", "sticker.png")
         img.save(sticker_path)
