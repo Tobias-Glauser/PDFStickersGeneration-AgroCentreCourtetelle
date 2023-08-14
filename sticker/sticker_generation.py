@@ -1,10 +1,8 @@
 import os
 import time
 
-from threading import Thread
 from datetime import datetime
 
-from CTkMessagebox import CTkMessagebox
 from PIL import ImageFont, ImageDraw, Image as PILImage
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
