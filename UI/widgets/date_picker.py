@@ -128,11 +128,10 @@ class DayPicker(customtkinter.CTkFrame):
         calendar = cal.Calendar()
         month = calendar.monthdatescalendar(self.date.year, self.date.month)
 
-        days_first_letter = ["L", "M", "M", "J", "V", "S", "D"]
-
-        for i in range(7):
-            day_label = customtkinter.CTkLabel(self, text=days_first_letter[i], width=10, height=30)
-            day_label.grid(row=0, column=i, padx=3, pady=3)
+        names = list(cal.day_name)
+        for name in names:
+            day_label = customtkinter.CTkLabel(self, text=name[:2], width=10, height=30)
+            day_label.grid(row=0, column=names.index(name), padx=3, pady=3)
 
         for week in month:
             for day in week:
