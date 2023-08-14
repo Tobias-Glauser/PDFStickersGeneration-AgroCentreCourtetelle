@@ -1,21 +1,54 @@
 import customtkinter
-from datetime import date
+from datetime import date as Date
 from dateutil.relativedelta import relativedelta
+import calendar as cal
 
 
-class DatePicker(customtkinter.CTkFrame):
+class DatePicker:
+    value = None
 
-    def __init__(self, parent, **kwargs):
+    @staticmethod
+    def get_date():
+        date_picker_window = DatePickerTopLevel(command=DatePicker.set_value)
+        date_picker_window.wait_window()
+        value = DatePicker.value
+        DatePicker.value = None
+        return value
 
-        super().__init__(parent, **kwargs)
-        self.year_month_picker = YearMonthPicker(self)
-        self.year_month_picker.pack(side="left", fill="both", expand=True)
+    @staticmethod
+    def set_value(value):
+        DatePicker.value = value
+
+
+class DatePickerTopLevel(customtkinter.CTkToplevel):
+
+    def __init__(self, command=None, **kwargs):
+
+        super().__init__(**kwargs)
+        self.title("Sélectionner une date")
+        self.after(250, lambda: self.iconbitmap("UI/assets/icon.ico"))
+
+        if command is not None:
+            self.command = command
+        else:
+            self.command = lambda ignored: None
+
+        self.day_picker = DayPicker(self, command=self.command_callback)
+        self.year_month_picker = YearMonthPicker(self, command=self.day_picker.update)
+        self.year_month_picker.pack(padx=10, pady=10)
+        self.day_picker.pack(padx=10, pady=10)
+
+        self.today_button = customtkinter.CTkButton(self, text="Aujourd'hui", command=lambda : self.command_callback(Date.today()))
+        self.today_button.pack(padx=10, pady=10)
+
+    def command_callback(self, date):
+        self.command(date)
+        self.destroy()
 
 
 class YearMonthPicker(customtkinter.CTkFrame):
 
-    def __init__(self, parent, start_date: date = date.today(), command=None, **kwargs):
-
+    def __init__(self, parent, start_date: Date = Date.today(), command=None, **kwargs):
         super().__init__(parent, **kwargs)
         self.date = start_date
         self.command = command
@@ -39,22 +72,22 @@ class YearMonthPicker(customtkinter.CTkFrame):
     def month_subtract(self):
         self.date = self.date - relativedelta(months=1)
         self.update()
-        self.command(self.get_date())
+        self.execute_command()
 
     def month_add(self):
         self.date = self.date + relativedelta(months=1)
         self.update()
-        self.command(self.get_date())
+        self.execute_command()
 
     def year_subtract(self):
         self.date = self.date - relativedelta(years=1)
         self.update()
-        self.command(self.get_date())
+        self.execute_command()
 
     def year_add(self):
         self.date = self.date + relativedelta(years=1)
         self.update()
-        self.command(self.get_date())
+        self.execute_command()
 
     def update(self):
         self.month.delete(0, "end")
@@ -65,21 +98,44 @@ class YearMonthPicker(customtkinter.CTkFrame):
     def get_date(self):
         return self.date
 
+    def execute_command(self):
+        if self.command is not None:
+            self.command(self.get_date())
 
-# class DayPicker(customtkinter.CTkFrame):
-#
-#     def __init__(self, parent, date=None, **kwargs):
-#         super().__init__(parent, **kwargs)
-#         self.date = None
-#         self.update(date)
-#         self.buttons = []
-#
-#     def update(self, date=None):
-#         self.date = date
-#         for button in self.buttons:
-#             button.destroy()
-#
-#
-#
-#
 
+class DayPicker(customtkinter.CTkFrame):
+
+    def __init__(self, parent, date=None, command=None, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.date = None
+        self.buttons = []
+
+        if command is not None:
+            self.command = command
+        else:
+            self.command = lambda ignored: None
+        self.update(date)
+
+    def update(self, actual_date: Date = None):
+        self.date = actual_date
+        if actual_date is None:
+            self.date = Date.today()
+        for button in self.buttons:
+            button.destroy()
+
+        calendar = cal.Calendar()
+        month = calendar.monthdatescalendar(self.date.year, self.date.month)
+
+        days_first_letter = ["L", "M", "M", "J", "V", "S", "D"]
+
+        for i in range(7):
+            day_label = customtkinter.CTkLabel(self, text=days_first_letter[i], width=10, height=30)
+            day_label.grid(row=0, column=i, padx=3, pady=3)
+
+        for week in month:
+            for day in week:
+                button = customtkinter.CTkButton(self, text=str(day.day), command=lambda date=day: self.command(date),
+                                                 width=30, height=30,
+                                                 fg_color="#48aeff" if day.month != self.date.month else None)
+                button.grid(row=month.index(week) + 1, column=day.weekday(), padx=3, pady=3)
+                self.buttons.append(button)
