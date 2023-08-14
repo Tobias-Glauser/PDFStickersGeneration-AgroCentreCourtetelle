@@ -128,7 +128,7 @@ class DayPicker(customtkinter.CTkFrame):
         calendar = cal.Calendar()
         month = calendar.monthdatescalendar(self.date.year, self.date.month)
 
-        days_first_letter = ["L", "M", "M", "J", "V", "S", "D"]
+        days_first_letter = ["lu", "ma", "me", "je", "ve", "sa", "di"]
 
         for i in range(7):
             day_label = customtkinter.CTkLabel(self, text=days_first_letter[i], width=10, height=30)
