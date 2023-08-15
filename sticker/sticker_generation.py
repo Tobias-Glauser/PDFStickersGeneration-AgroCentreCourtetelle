@@ -130,87 +130,39 @@ class StickerGenerator:
         text_y_coordinates = 0
         width = 301 - 84
         for data in sticker.data:
-            left_offset = 84
+
+            prefix_line_offset, main_line_offset, suffix_line_offset = StickerGenerator.get_lines_offsets(sticker,
+                                                                                                          data,
+                                                                                                          width)
 
             if data.blockprefix:
-                if sticker.align == 'center':
-                    left_offset += (width -
-                                    StickerGenerator.get_text_width(data.blockprefix,
-                                                                    StickerGenerator.fonts[data.prefixfont])
-                                    ) / 2
-                draw.text((left_offset, text_y_coordinates),
-                          data.blockprefix, (0, 0, 0),
-                          font=StickerGenerator.fonts[data.prefixfont]['font'])
+                StickerGenerator.draw_element(data, draw, prefix_line_offset, text_y_coordinates, "blockprefix")
                 text_y_coordinates += StickerGenerator.fonts[data.prefixfont]['real_size']
 
-            if sticker.align == 'center':
-                if data.inlineprefix and data.inlinesuffix:
-                    left_offset = 84 + \
-                                  (width -
-                                   (StickerGenerator.get_text_width(data.inlineprefix,
-                                                                    StickerGenerator.fonts[data.prefixfont]) +
-                                    StickerGenerator.get_text_width(data.value,
-                                                                    StickerGenerator.fonts[data.font]) +
-                                    StickerGenerator.get_text_width(data.inlinesuffix,
-                                                                    StickerGenerator.fonts[data.suffixfont])
-                                    )
-                                   ) / 2
-                elif data.inlineprefix:
-                    left_offset = 84 + \
-                                  (width -
-                                   (StickerGenerator.get_text_width(data.inlineprefix,
-                                                                    StickerGenerator.fonts[data.prefixfont]) +
-                                    StickerGenerator.get_text_width(data.value,
-                                                                    StickerGenerator.fonts[data.font])
-                                    )
-                                   ) / 2
-                elif data.inlinesuffix:
-                    left_offset = 84 + \
-                                  (width -
-                                   (StickerGenerator.get_text_width(data.value,
-                                                                    StickerGenerator.fonts[data.font]) +
-                                    StickerGenerator.get_text_width(data.inlinesuffix,
-                                                                    StickerGenerator.fonts[data.suffixfont])
-                                    )
-                                   ) / 2
-                else:
-                    left_offset = 84 + \
-                                  (width -
-                                   StickerGenerator.get_text_width(data.value,
-                                                                   StickerGenerator.fonts[data.font])
-                                   ) / 2
-
             if data.inlineprefix:
-                draw.text((left_offset, text_y_coordinates),
-                          data.inlineprefix, (0, 0, 0),
-                          font=StickerGenerator.fonts[data.prefixfont]['font'])
-                left_offset += StickerGenerator.get_text_width(data.inlineprefix,
-                                                               StickerGenerator.fonts[data.prefixfont])
+                StickerGenerator.draw_element(data, draw, main_line_offset, text_y_coordinates, "inlineprefix")
+                main_line_offset += StickerGenerator.get_text_width(data.inlineprefix,
+                                                                    StickerGenerator.fonts[data.prefixfont])
 
-            draw.text((left_offset, text_y_coordinates),
-                      data.value, (0, 0, 0),
-                      font=StickerGenerator.fonts[data.font]['font'])
-            left_offset += StickerGenerator.get_text_width(data.value, StickerGenerator.fonts[data.font])
+            StickerGenerator.draw_element(data, draw, main_line_offset, text_y_coordinates, "value")
+            main_line_offset += StickerGenerator.get_text_width(data.value, StickerGenerator.fonts[data.font])
 
             if data.inlinesuffix:
-                draw.text((left_offset, text_y_coordinates),
-                          data.inlinesuffix, (0, 0, 0),
-                          font=StickerGenerator.fonts[data.suffixfont]['font'])
+                StickerGenerator.draw_element(data, draw, main_line_offset, text_y_coordinates, "inlinesuffix")
+                main_line_offset += StickerGenerator.get_text_width(data.inlinesuffix,
+                                                                    StickerGenerator.fonts[data.suffixfont])
+
+            biggest_font = StickerGenerator.fonts[data.font]['real_size']
+            if StickerGenerator.fonts[data.prefixfont]['real_size'] > biggest_font:
+                biggest_font = StickerGenerator.fonts[data.prefixfont]['real_size']
+            elif StickerGenerator.fonts[data.suffixfont]['real_size'] > biggest_font:
+                biggest_font = StickerGenerator.fonts[data.suffixfont]['real_size']
+
+            text_y_coordinates += biggest_font
 
             if data.blocksuffix:
-                left_offset = 84
-                if sticker.align == 'center':
-                    left_offset += (width -
-                                    StickerGenerator.get_text_width(data.blocksuffix,
-                                                                    StickerGenerator.fonts[data.suffixfont])
-                                    ) / 2
-                text_y_coordinates += StickerGenerator.fonts[data.font]['real_size']
-                draw.text((left_offset, text_y_coordinates),
-                          data.blocksuffix, (0, 0, 0),
-                          font=StickerGenerator.fonts[data.suffixfont]['font'])
+                StickerGenerator.draw_element(data, draw, suffix_line_offset, text_y_coordinates, "blocksuffix")
                 text_y_coordinates += StickerGenerator.fonts[data.suffixfont]['real_size']
-            else:
-                text_y_coordinates += StickerGenerator.fonts[data.font]['real_size']
 
             text_y_coordinates += 10
 
@@ -230,3 +182,108 @@ class StickerGenerator:
     @staticmethod
     def get_text_width(text, font_type):
         return font_type['font'].getmask(text.replace(" ", "_")).getbbox()[2]
+
+    @staticmethod
+    def get_line_size(data, elements):
+        total_size = 0
+        for element in elements:
+            if element not in ["blockprefix", "blocksuffix", "inlineprefix", "inlinesuffix", "value"]:
+                raise Exception("Unknown element: " + element)
+
+            elif element == "blockprefix" and len(data.blockprefix) > 0:
+                total_size += StickerGenerator.get_text_width(data.blockprefix,
+                                                              StickerGenerator.fonts[data.prefixfont])
+            elif element == "blocksuffix" and len(data.blocksuffix) > 0:
+                total_size += StickerGenerator.get_text_width(data.blocksuffix,
+                                                              StickerGenerator.fonts[data.suffixfont])
+            elif element == "inlineprefix" and len(data.inlineprefix) > 0:
+                total_size += StickerGenerator.get_text_width(data.inlineprefix,
+                                                              StickerGenerator.fonts[data.prefixfont])
+            elif element == "inlinesuffix" and len(data.inlinesuffix) > 0:
+                total_size += StickerGenerator.get_text_width(data.inlinesuffix,
+                                                              StickerGenerator.fonts[data.suffixfont])
+            elif element == "value" and len(data.value) > 0:
+                total_size += StickerGenerator.get_text_width(data.value,
+                                                              StickerGenerator.fonts[data.font])
+
+        return total_size
+
+    @staticmethod
+    def element_to_big(size, max_size):
+        if size > max_size:
+            return True
+        return False
+
+    @staticmethod
+    def draw_element(data, draw, left_offset, text_y_coordinates, element_name):
+        if element_name == "inlineprefix":
+            StickerGenerator.draw_text(draw,
+                                       left_offset,
+                                       text_y_coordinates,
+                                       data.inlineprefix,
+                                       StickerGenerator.fonts[data.prefixfont]['font'])
+
+        if element_name == "inlinesuffix":
+            StickerGenerator.draw_text(draw,
+                                       left_offset,
+                                       text_y_coordinates,
+                                       data.inlinesuffix,
+                                       StickerGenerator.fonts[data.suffixfont]['font'])
+
+        if element_name == "blockprefix":
+            StickerGenerator.draw_text(draw,
+                                       left_offset,
+                                       text_y_coordinates,
+                                       data.blockprefix,
+                                       StickerGenerator.fonts[data.prefixfont]['font'])
+
+        if element_name == "blocksuffix":
+            StickerGenerator.draw_text(draw,
+                                       left_offset,
+                                       text_y_coordinates,
+                                       data.blocksuffix,
+                                       StickerGenerator.fonts[data.suffixfont]['font'])
+
+        if element_name == "value":
+            StickerGenerator.draw_text(draw,
+                                       left_offset,
+                                       text_y_coordinates,
+                                       data.value,
+                                       StickerGenerator.fonts[data.font]['font'])
+
+    @staticmethod
+    def draw_text(draw, left_offset, text_y_coordinates, text, font):
+        draw.text((left_offset, text_y_coordinates),
+                  text,
+                  (0, 0, 0),
+                  font=font)
+
+    @staticmethod
+    def get_lines_sizes(data, width):
+        prefix_line_size = StickerGenerator.get_line_size(data, ["blockprefix"])
+        main_line_size = StickerGenerator.get_line_size(data, ["inlineprefix", "value", "inlinesuffix"])
+        suffix_line_size = StickerGenerator.get_line_size(data, ["blocksuffix"])
+
+        if StickerGenerator.element_to_big(prefix_line_size, width):
+            raise Exception("Line too long", data.name, data.blockprefix)
+        if StickerGenerator.element_to_big(main_line_size, width):
+            raise Exception("Line too long", data.name, data.inlinesuffix + data.value + data.inlinesuffix)
+        if StickerGenerator.element_to_big(suffix_line_size, width):
+            raise Exception("Line too long", data.name, data.blocksuffix)
+
+        return prefix_line_size, main_line_size, suffix_line_size
+
+    @staticmethod
+    def get_lines_offsets(sticker, data, width):
+        prefix_line_size, main_line_size, suffix_line_size = StickerGenerator.get_lines_sizes(data, width)
+
+        prefix_line_offset = 84
+        main_line_offset = 84
+        suffix_line_offset = 84
+
+        if sticker.align == 'center':
+            prefix_line_offset += (width - prefix_line_size) / 2
+            main_line_offset += (width - main_line_size) / 2
+            suffix_line_offset += (width - suffix_line_size) / 2
+
+        return prefix_line_offset, main_line_offset, suffix_line_offset
