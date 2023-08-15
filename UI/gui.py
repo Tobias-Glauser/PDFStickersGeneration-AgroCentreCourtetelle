@@ -183,6 +183,11 @@ class App(customtkinter.CTk):
         try:
             sticker_frame.sticker.generate(save_file_path, progress_bar.set_state, progress_bar.destroy, stickers_left=stickers_left, total_stickers=total_stickers)
         except Exception as e:
+            if e.args[0] == "Line too long":
+                CTkMessagebox(title="Erreur",
+                              message="Le texte du champ " + e.args[1] + "(" + e.args[2] + ") est trop long pour "
+                                                                                           "l'autocollant.",
+                              icon="cancel")
             return False
         return save_file_path
 
