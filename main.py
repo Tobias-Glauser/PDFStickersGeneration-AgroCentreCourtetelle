@@ -17,14 +17,11 @@ locale.setlocale(locale.LC_TIME, '')
 
 empty_tmp()
 data = json.load(open('model/data.json', encoding='utf-8-sig'))
-print(data)
 
 stickers = Stickers()
 for sticker in data:
-    print(sticker)
     datas = []
     for data in sticker['data']:
-        print(data)
         if data['type'] == 'number':
             datas.append(StickerDataNumber(data['name'],
                                            inlineprefix=data['inline_prefix'],
@@ -67,4 +64,3 @@ for sticker in data:
 
 app = App(stickers)
 app.mainloop()
-

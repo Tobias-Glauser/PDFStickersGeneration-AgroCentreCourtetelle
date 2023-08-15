@@ -2,7 +2,6 @@ from datetime import datetime
 
 from sticker.sticker_data import StickerDataNumber, StickerDataText, StickerDataDate, StickerDataList
 from sticker.sticker_generation import StickerGenerator
-import os
 
 
 class StickerType:
@@ -52,7 +51,6 @@ class StickerType:
         raise Exception('no valid date format found')
 
     def generate(self, save_file_path, state_callback=None, progress_bar_destroy_callback=None, **kwargs):
-        print(save_file_path)
         try:
             sticker_generator = StickerGenerator(state_callback, progress_bar_destroy_callback)
             sticker_generator.generate_stickers(self, save_file_path, **kwargs)

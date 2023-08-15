@@ -1,10 +1,8 @@
 import os
 import time
 
-from threading import Thread
 from datetime import datetime
 
-from CTkMessagebox import CTkMessagebox
 from PIL import ImageFont, ImageDraw, Image as PILImage
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
@@ -25,11 +23,11 @@ class StickerGenerator:
             'real_size': None,
         },
         'big': {
-            'font': ImageFont.truetype("segoeui.ttf", 35),
+            'font': ImageFont.truetype("segoeui.ttf", 28),
             'real_size': None,
         },
         'big_bold': {
-            'font': ImageFont.truetype("segoeuib.ttf", 35),
+            'font': ImageFont.truetype("segoeuib.ttf", 28),
             'real_size': None,
         },
     }

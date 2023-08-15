@@ -53,7 +53,7 @@
   },
   {
     "name": "Sticker Fourrage",
-    "align": "left",
+    "align": "center",
     "data": [
       {
         "name": "Client",
@@ -61,7 +61,7 @@
         "inline_suffix": "",
         "block_prefix": "",
         "block_suffix": "",
-        "font": "normal",
+        "font": "bold",
         "suffix_font": "normal",
         "prefix_font": "normal",
         "type": "text"
@@ -72,7 +72,7 @@
         "inline_suffix": "",
         "block_prefix": "",
         "block_suffix": "",
-        "font": "normal",
+        "font": "big_bold",
         "suffix_font": "normal",
         "prefix_font": "normal",
         "type": "text"
@@ -83,8 +83,8 @@
         "inline_suffix": " KG",
         "block_prefix": "",
         "block_suffix": "",
-        "font": "big_bold",
-        "suffix_font": "big_bold",
+        "font": "normal",
+        "suffix_font": "normal",
         "prefix_font": "normal",
         "type": "list",
         "values": ["20", "25", "30", "35", "40", "45", "50"]
@@ -104,10 +104,21 @@
   },
   {
     "name": "Sticker Triage",
-    "align": "left",
+    "align": "center",
     "data": [
       {
         "name": "Client",
+        "inline_prefix": "",
+        "inline_suffix": "",
+        "block_prefix": "",
+        "block_suffix": "",
+        "font": "bold",
+        "suffix_font": "normal",
+        "prefix_font": "normal",
+        "type": "text"
+      },
+      {
+        "name": "Produit",
         "inline_prefix": "",
         "inline_suffix": "",
         "block_prefix": "",
@@ -129,24 +140,13 @@
         "type": "text"
       },
       {
-        "name": "Produit",
-        "inline_prefix": "",
-        "inline_suffix": "",
-        "block_prefix": "",
-        "block_suffix": "",
-        "font": "normal",
-        "suffix_font": "normal",
-        "prefix_font": "normal",
-        "type": "text"
-      },
-      {
         "name": "Poids [kg]",
         "inline_prefix": "",
         "inline_suffix": " KG",
         "block_prefix": "",
         "block_suffix": "",
-        "font": "bold",
-        "suffix_font": "bold",
+        "font": "normal",
+        "suffix_font": "normal",
         "prefix_font": "normal",
         "type": "list",
         "values": ["20", "25", "30", "35", "40", "45", "50"]

@@ -22,7 +22,3 @@ class StickerGenProgressBar(customtkinter.CTkProgressBar):
 
     def destroy(self):
         super().destroy()
-
-
-
-
