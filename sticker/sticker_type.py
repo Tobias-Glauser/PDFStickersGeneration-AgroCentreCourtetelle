@@ -55,7 +55,6 @@ class StickerType:
             sticker_generator = StickerGenerator(state_callback, progress_bar_destroy_callback)
             sticker_generator.generate_stickers(self, save_file_path, **kwargs)
         except Exception as e:
-            print(e)
             if state_callback is not None:
                 progress_bar_destroy_callback()
-            return
+            raise e

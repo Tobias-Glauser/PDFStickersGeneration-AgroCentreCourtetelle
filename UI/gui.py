@@ -65,26 +65,37 @@ class App(customtkinter.CTk):
 
         self.button = customtkinter.CTkButton(self,
                                               text="Générer",
-                                              command=lambda: Thread(target=self.generate_sticker_callback,
-                                                                     args=(self.sticker_frame,))
-                                              .start())
+                                              command=lambda: self.generate_sticker_callback(self.sticker_frame))
         self.button.grid(row=3, column=0, columnspan=1, padx=10, pady=10)
 
         self.button = customtkinter.CTkButton(self,
                                               text="Imprimer",
-                                              command=lambda: Thread(target=self.print_sticker_callback,
-                                                                     args=(self.sticker_frame,))
-                                              .start())
+                                              command=lambda: self.print_sticker_callback(self.sticker_frame))
         self.button.grid(row=6, column=0, columnspan=1, padx=10, pady=10)
 
     def generate_sticker_callback(self, sticker_frame):
+        if self.thread is not None and self.thread.is_alive():
+            CTkMessagebox(title="Error", message="Il y a dejà un sticker en cours de création", icon="cancel")
+            return
+
+        self.thread = Thread(target=self.generate_sticker_generate_method, args=(sticker_frame,)).start()
+
+    def generate_sticker_generate_method(self, sticker_frame):
         result = self.generate_sticker(sticker_frame)
+        print(result)
         if result is False:
             return
 
         os.startfile(result)
 
     def print_sticker_callback(self, sticker_frame):
+        if self.thread is not None and self.thread.is_alive():
+            CTkMessagebox(title="Error", message="Il y a dejà un sticker en cours de création", icon="cancel")
+            return
+
+        self.thread = Thread(target=self.generate_sticker_print_method, args=(sticker_frame,)).start()
+
+    def generate_sticker_print_method(self, sticker_frame):
         filename = os.getcwd() + "\\tmp\\tmp_1.pdf"
         while os.path.exists(filename):
             number = (filename.split(".")[0]).split("_")[-1]
@@ -93,14 +104,14 @@ class App(customtkinter.CTk):
         if result is False:
             return
 
-        self.printer.print(result)
+        Thread(target=self.printer.print, args=(result,)).start()
+
+    def print_sticker(self, file_path):
+        self.printer.print(file_path)
         time.sleep(60)
-        os.remove(result)
+        os.remove(file_path)
 
     def generate_sticker(self, sticker_frame, save_file_path=None):
-        if self.thread is not None and self.thread.is_alive():
-            CTkMessagebox(title="Error", message="Il y a dejà un sticker en cours de création", icon="cancel")
-            return False
         sticker_frame.get_data()
 
         if not sticker_frame.sticker.is_valid():
@@ -169,11 +180,10 @@ class App(customtkinter.CTk):
         progress_bar = StickerGenProgressBar(self, width=50)
         progress_bar.grid(row=4, column=0, columnspan=1, padx=10, pady=10, sticky="ew")
         self.update()
-        self.thread = Thread(target=sticker_frame.sticker.generate,
-                             args=(save_file_path, progress_bar.set_state, progress_bar.destroy),
-                             kwargs={"stickers_left": stickers_left, "total_stickers": total_stickers})
-        self.thread.start()
-        self.thread.join()
+        try:
+            sticker_frame.sticker.generate(save_file_path, progress_bar.set_state, progress_bar.destroy, stickers_left=stickers_left, total_stickers=total_stickers)
+        except Exception as e:
+            return False
         return save_file_path
 
     def set_printer(self, _ignored):
