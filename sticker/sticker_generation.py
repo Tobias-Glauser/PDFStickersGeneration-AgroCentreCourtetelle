@@ -62,8 +62,8 @@ class StickerGenerator:
     def generate_pdf(self, save_file_path, sticker_img_path, stickers_left=24, total_stickers=24):
         """
         Creates a pdf file with a sticker image
-        :param save_file_path: path to which the pdf will be saved
-        :param sticker_img_path: path to the sticker image
+        :param save_file_path: Path to which the pdf will be saved
+        :param sticker_img_path: Path to the sticker image
         :param stickers_left: Number of stickers left on the page | default: 24 (full page)
         :param total_stickers: Number of stickers to print | default: 24 (full page)
         :return: None
@@ -272,7 +272,7 @@ class StickerGenerator:
         :param draw: ImageDraw object used to draw on the sticker image
         :param left_offset: Offset of the element on the left (x coordinate to start drawing at)
         :param text_y_coordinates: Y coordinate to start drawing at
-        :param element_name: name of the element to draw of the sticker (present in the data (inlineprefix, value, ...)))
+        :param element_name: Name of the element to draw of the sticker (present in the data (inlineprefix, value, ...)))
         :return: None
         """
         if element_name == "inlineprefix":
@@ -352,7 +352,7 @@ class StickerGenerator:
     def get_lines_offsets(sticker, data, width):
         """
         Calculates the offsets of the lines of the sticker data
-        :param sticker: sticker to calculate the line offsets of
+        :param sticker: Sticker to calculate the line offsets of
         :param data: Data of the sticker to calculate the line offsets of
         :param width: Maximum width of the sticker drawable area
         :return: None
