@@ -33,7 +33,11 @@ class Printer:
         Prints a pdf file
         :param file_path: Path to the pdf file to print
         :return: None
+        :raises FileNotFoundError: If the file does not exist
         """
+        if not os.path.isfile(file_path):
+            raise FileNotFoundError("File not found: " + file_path)
+
         script = "\"" + \
                  self.foxit_path + \
                  "\" /printto:default=no \"" + \
