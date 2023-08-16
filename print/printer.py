@@ -31,7 +31,7 @@ class Printer:
     def print(self, file_path):
         """
         Prints a pdf file
-        :param file_path: path to the pdf file to print
+        :param file_path: Path to the pdf file to print
         :return: None
         """
         script = "\"" + \
