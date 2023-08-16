@@ -82,6 +82,9 @@ class IntSpinbox(customtkinter.CTkFrame):
         self.entry.delete(0, "end")
         self.entry.insert(0, str(int(value)))
 
+    def empty(self):
+        self.entry.delete(0, "end")
+
     def on_press_add(self):
         self.event.clear()
         self.timer = Thread(target=self.mouse_hold, args=(self.event, self.add_button_callback))
