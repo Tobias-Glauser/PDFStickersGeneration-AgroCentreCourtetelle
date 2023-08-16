@@ -50,12 +50,6 @@ class StickerType:
                 pass
         raise Exception('no valid date format found')
 
-    def generate(self, save_file_path, state_callback=None, progress_bar_destroy_callback=None, **kwargs):
-        try:
-            sticker_generator = StickerGenerator(state_callback, progress_bar_destroy_callback)
-            sticker_generator.generate_stickers(self, save_file_path, **kwargs)
-        except Exception as e:
-            print(e)
-            if state_callback is not None:
-                progress_bar_destroy_callback()
-            return
+    def generate(self, save_file_path, state_callback=None, **kwargs):
+        sticker_generator = StickerGenerator(state_callback)
+        sticker_generator.generate_stickers(self, save_file_path, **kwargs)
