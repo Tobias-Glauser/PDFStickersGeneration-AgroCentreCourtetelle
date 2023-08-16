@@ -174,6 +174,7 @@ class IntSpinbox(customtkinter.CTkFrame):
             count += 1
             if event.is_set():
                 return
+
         for i in range(5):
             self.holding = True
             callback()
@@ -183,8 +184,8 @@ class IntSpinbox(customtkinter.CTkFrame):
                 count += 1
                 if event.is_set():
                     return
-        while True:
 
+        while True:
             callback()
             time.sleep(.1)
             if event.is_set():
