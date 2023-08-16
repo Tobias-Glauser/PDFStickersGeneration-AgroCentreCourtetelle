@@ -6,12 +6,25 @@ from threading import Thread, Event
 
 
 class IntSpinbox(customtkinter.CTkFrame):
+    """
+    Class to represent an integer spinbox
+    """
     def __init__(self, *args,
                  width: int = 100,
                  height: int = 32,
                  step_size: Union[int] = 1,
                  command: Callable = None,
                  **kwargs):
+        """
+        IntSpinbox constructor
+        :param args: Arguments for the customtkinter.CTkFrame class
+        :param width: Width of the spinbox
+        :param height: Height of the spinbox
+        :param step_size: Increment or decrement value
+        :param command: Command to execute when the value is changed
+        :param kwargs: Keyword arguments for the customtkinter.CTkFrame class
+        :return: None
+        """
         super().__init__(*args, width=width, height=height, **kwargs)
 
         self.event = Event()
@@ -45,6 +58,10 @@ class IntSpinbox(customtkinter.CTkFrame):
         self.entry.insert(0, "")
 
     def add_button_callback(self):
+        """
+        Callback for the add button
+        :return: None
+        """
         if self.command is not None:
             self.command()
         try:
@@ -58,6 +75,10 @@ class IntSpinbox(customtkinter.CTkFrame):
             return
 
     def subtract_button_callback(self):
+        """
+        Callback for the subtract button
+        :return: None
+        """
         if self.command is not None:
             self.command()
         if self.entry.get() == "":
@@ -73,29 +94,55 @@ class IntSpinbox(customtkinter.CTkFrame):
             return
 
     def get(self) -> Union[int, None]:
+        """
+        Get the value of the entry field
+        :return: The value of the entry field
+        """
         try:
             return int(self.entry.get())
         except ValueError:
             return None
 
     def set(self, value: int):
+        """
+        Set the value of the entry field
+        :param value: Integer value to set
+        :return: None
+        """
         self.entry.delete(0, "end")
         self.entry.insert(0, str(int(value)))
 
     def empty(self):
+        """
+        Empty the entry field
+        :return: None
+        """
         self.entry.delete(0, "end")
 
     def on_press_add(self):
+        """
+        When the add button is pressed
+        :return: None
+        """
         self.event.clear()
         self.timer = Thread(target=self.mouse_hold, args=(self.event, self.add_button_callback))
         self.timer.start()
 
     def on_press_substract(self):
+        """
+        When the subtract button is pressed
+        :return: None
+        """
         self.event.clear()
         self.timer = Thread(target=self.mouse_hold, args=(self.event, self.subtract_button_callback))
         self.timer.start()
 
     def on_release_substract(self, _ignored):
+        """
+        When the subtract button is released
+        :param _ignored: Unused parameter
+        :return: None
+        """
         self.event.set()
         if self.holding:
             self.holding = False
@@ -103,6 +150,11 @@ class IntSpinbox(customtkinter.CTkFrame):
             self.subtract_button_callback()
 
     def on_release_add(self, _ignored):
+        """
+        When the add button is released
+        :param _ignored: Unused parameter
+        :return: None
+        """
         self.event.set()
         if self.holding:
             self.holding = False
@@ -110,6 +162,12 @@ class IntSpinbox(customtkinter.CTkFrame):
             self.add_button_callback()
 
     def mouse_hold(self, event, callback):
+        """
+        When the mouse is held on one of the buttons
+        :param event: Event to wait for that represents the mouse release
+        :param callback: Function to call when the mouse is held
+        :return: None
+        """
         count = 0
         while count < 3:
             time.sleep(.1)

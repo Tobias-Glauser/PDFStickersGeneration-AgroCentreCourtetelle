@@ -13,6 +13,9 @@ from UI.widgets.pdf_gen_progress_bar import StickerGenProgressBar
 
 
 class StickerGenerator:
+    """
+    Class for generating stickers
+    """
     fonts = {
         'normal': {
             'font': ImageFont.truetype("segoeui.ttf", 20),
@@ -33,10 +36,22 @@ class StickerGenerator:
     }
 
     def __init__(self, state_callback=None):
+        """
+        StickerGenerator constructor
+        :param state_callback: Callback function for updating progress bar states corresponding to the current state
+        :return: None
+        """
         self.state_callback = state_callback
         StickerGenerator.__generate_fonts_real_sizes()
 
     def generate_stickers(self, sticker, save_file_path, **kwargs):
+        """
+        Generates stickers in a pdf file
+        :param sticker: Sticker to generate
+        :param save_file_path: Path to which the pdf will be saved
+        :param kwargs: Keyword arguments for the pdf generation (stickers_left, total_stickers)
+        :return: None
+        """
         time.sleep(1.5)
         self.update_state_if_needed(StickerGenProgressBar.StickerProgressBarStates.GENERATING_IMG)
         sticker_img_path = StickerGenerator.create_sticker(sticker)
@@ -45,6 +60,14 @@ class StickerGenerator:
         self.generate_pdf(save_file_path, sticker_img_path, **kwargs)
 
     def generate_pdf(self, save_file_path, sticker_img_path, stickers_left=24, total_stickers=24):
+        """
+        Creates a pdf file with a sticker image
+        :param save_file_path: Path to which the pdf will be saved
+        :param sticker_img_path: Path to the sticker image
+        :param stickers_left: Number of stickers left on the page | default: 24 (full page)
+        :param total_stickers: Number of stickers to print | default: 24 (full page)
+        :return: None
+        """
         if total_stickers is None:
             total_stickers = 24
 
@@ -113,11 +136,21 @@ class StickerGenerator:
         time.sleep(0.5)
 
     def update_state_if_needed(self, state):
+        """
+        Updates the progress bar state if a callback function was provided
+        :param state: State to which the progress bar will be updated
+        :return: None
+        """
         if self.state_callback is not None:
             self.state_callback(state)
 
     @staticmethod
     def create_sticker(sticker):
+        """
+        Creates a sticker image
+        :param sticker: Sticker to generate
+        :return: Path to the generated sticker image
+        """
         img = PILImage.open(os.getcwd() + "\\sticker_img\\agrocentre_logo.png")
         draw = ImageDraw.Draw(img)
 
@@ -167,6 +200,11 @@ class StickerGenerator:
 
     @staticmethod
     def __generate_fonts_real_sizes():
+        """
+        Generates the real sizes of the fonts
+        Only needs to be called once
+        :return: None
+        """
         if StickerGenerator.fonts['normal']['real_size'] is None:
             for key in StickerGenerator.fonts:
                 ascent, descent = StickerGenerator.fonts[key]['font'].getmetrics()
@@ -175,10 +213,22 @@ class StickerGenerator:
 
     @staticmethod
     def get_text_width(text, font_type):
+        """
+        Calculates the width of a text
+        :param text: Text to calculate the width of
+        :param font_type: Font type used to calculate the width
+        :return: The width of the text
+        """
         return font_type['font'].getmask(text.replace(" ", "_")).getbbox()[2]
 
     @staticmethod
     def get_line_size(data, elements):
+        """
+        Calculates the size of a line
+        :param data: Data of the sticker to calculate the line size of
+        :param elements: Elements from the data that are in the line
+        :return: The total size of the line
+        """
         total_size = 0
         for element in elements:
             if element not in ["blockprefix", "blocksuffix", "inlineprefix", "inlinesuffix", "value"]:
@@ -204,12 +254,27 @@ class StickerGenerator:
 
     @staticmethod
     def element_to_big(size, max_size):
+        """
+        Checks if a line is too big for the sticker
+        :param size: Size of the line
+        :param max_size: Maximum size of the line
+        :return: True if the line is too big, False otherwise
+        """
         if size > max_size:
             return True
         return False
 
     @staticmethod
     def draw_element(data, draw, left_offset, text_y_coordinates, element_name):
+        """
+        Draws an element of the sticker on the sticker image
+        :param data: Data of the sticker
+        :param draw: ImageDraw object used to draw on the sticker image
+        :param left_offset: Offset of the element on the left (x coordinate to start drawing at)
+        :param text_y_coordinates: Y coordinate to start drawing at
+        :param element_name: Name of the element to draw of the sticker (present in the data (inlineprefix, value, ...)))
+        :return: None
+        """
         if element_name == "inlineprefix":
             StickerGenerator.draw_text(draw,
                                        left_offset,
@@ -247,6 +312,15 @@ class StickerGenerator:
 
     @staticmethod
     def draw_text(draw, left_offset, text_y_coordinates, text, font):
+        """
+        Draws text on the sticker image
+        :param draw: ImageDraw object used to draw on the sticker image
+        :param left_offset: Offset of the element on the left (x coordinate to start drawing at)
+        :param text_y_coordinates: Y coordinate to start drawing at
+        :param text: Text to draw
+        :param font: Font to use to draw the text
+        :return: None
+        """
         draw.text((left_offset, text_y_coordinates),
                   text,
                   (0, 0, 0),
@@ -254,6 +328,13 @@ class StickerGenerator:
 
     @staticmethod
     def get_lines_sizes(data, width):
+        """
+        Calculates the sizes of the lines of the sticker data
+        :param data: Data of the sticker to calculate the line sizes of
+        :param width: Maximum width of the sticker drawable area
+        :return: prefix_line_size, main_line_size, suffix_line_size
+        :raises Exception: If a line is too long
+        """
         prefix_line_size = StickerGenerator.get_line_size(data, ["blockprefix"])
         main_line_size = StickerGenerator.get_line_size(data, ["inlineprefix", "value", "inlinesuffix"])
         suffix_line_size = StickerGenerator.get_line_size(data, ["blocksuffix"])
@@ -269,6 +350,13 @@ class StickerGenerator:
 
     @staticmethod
     def get_lines_offsets(sticker, data, width):
+        """
+        Calculates the offsets of the lines of the sticker data
+        :param sticker: Sticker to calculate the line offsets of
+        :param data: Data of the sticker to calculate the line offsets of
+        :param width: Maximum width of the sticker drawable area
+        :return: None
+        """
         prefix_line_size, main_line_size, suffix_line_size = StickerGenerator.get_lines_sizes(data, width)
 
         prefix_line_offset = 84
