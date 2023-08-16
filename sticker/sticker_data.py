@@ -25,6 +25,7 @@ class StickerData(ABC):
         :param font: Font to use for the value when printing the sticker
         :param prefixfont: Font to use for the prefix when printing the sticker
         :param suffixfont: Font to use for the suffix when printing the sticker
+        :return: None
         """
         self.name = name
         self.value = value
@@ -46,6 +47,7 @@ class StickerDataNumber(StickerData):
         StickerDataNumber class constructor
         :param name: Name of the sticker data
         :param kwargs: Keyword arguments for the StickerData class constructor
+        :return: None
         """
         super().__init__(name, **kwargs)
 
@@ -59,6 +61,7 @@ class StickerDataText(StickerData):
         StickerDataText class constructor
         :param name: Name of the sticker data
         :param kwargs: Keyword arguments for the StickerData class constructor
+        :return: None
         """
         super().__init__(name, **kwargs)
 
@@ -72,6 +75,7 @@ class StickerDataDate(StickerData):
         StickerDataDate class constructor
         :param name: Name of the sticker data
         :param kwargs: Keyword arguments for the StickerData class constructor
+        :return: None
         """
         super().__init__(name, **kwargs)
 
@@ -86,6 +90,7 @@ class StickerDataList(StickerData):
         :param name: Name of the sticker data
         :param values: Possible values for the sticker data
         :param kwargs: Keyword arguments for the StickerData class constructor
+        :return: None
         """
         super().__init__(name, **kwargs)
         self.values = values
