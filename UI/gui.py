@@ -82,7 +82,6 @@ class App(customtkinter.CTk):
 
     def generate_sticker_generate_method(self, sticker_frame):
         result = self.generate_sticker(sticker_frame)
-        print(result)
         if result is False:
             return
 
@@ -194,10 +193,15 @@ class App(customtkinter.CTk):
             progress_bar.destroy()
             return False
         progress_bar.destroy()
+        self.empty_sticker_page_config_fields()
         return save_file_path
 
     def set_printer(self, _ignored):
         self.printer.set_printer(self.printer_choice_frame.get_printer())
+
+    def empty_sticker_page_config_fields(self):
+        self.config_sticker_frame.stickers_left.empty()
+        self.config_sticker_frame.total_stickers.empty()
 
 
 class StickerFrame(customtkinter.CTkScrollableFrame):
