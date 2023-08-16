@@ -49,7 +49,7 @@ class StickerGenerator:
         Generates stickers in a pdf file
         :param sticker: Sticker to generate
         :param save_file_path: Path to which the pdf will be saved
-        :param kwargs: Keyword arguments the pdf generation (stickers_left, total_stickers)
+        :param kwargs: Keyword arguments for the pdf generation (stickers_left, total_stickers)
         :return: None
         """
         time.sleep(1.5)
