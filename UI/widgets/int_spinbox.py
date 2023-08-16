@@ -40,10 +40,10 @@ class IntSpinbox(customtkinter.CTkFrame):
         self.grid_columnconfigure(1, weight=1)  # entry expands
 
         self.subtract_button = customtkinter.CTkButton(self, text="-", width=height - 6, height=height - 6,
-                                                       command=self.on_press_substract)
+                                                       command=self.on_press_subtract)
         self.subtract_button.grid(row=0, column=0, padx=(3, 0), pady=3)
 
-        self.subtract_button.bind("<ButtonRelease-1>", self.on_release_substract)
+        self.subtract_button.bind("<ButtonRelease-1>", self.on_release_subtract)
 
         self.entry = customtkinter.CTkEntry(self, width=width - (2 * height), height=height - 6, border_width=0)
         self.entry.grid(row=0, column=1, columnspan=1, padx=3, pady=3, sticky="ew")
@@ -128,7 +128,7 @@ class IntSpinbox(customtkinter.CTkFrame):
         self.timer = Thread(target=self.mouse_hold, args=(self.event, self.add_button_callback))
         self.timer.start()
 
-    def on_press_substract(self):
+    def on_press_subtract(self):
         """
         When the subtract button is pressed
         :return: None
@@ -137,7 +137,7 @@ class IntSpinbox(customtkinter.CTkFrame):
         self.timer = Thread(target=self.mouse_hold, args=(self.event, self.subtract_button_callback))
         self.timer.start()
 
-    def on_release_substract(self, _ignored):
+    def on_release_subtract(self, _ignored):
         """
         When the subtract button is released
         :param _ignored: Unused parameter

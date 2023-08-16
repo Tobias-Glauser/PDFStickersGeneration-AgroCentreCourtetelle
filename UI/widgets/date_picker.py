@@ -92,15 +92,15 @@ class YearMonthPicker(customtkinter.CTkFrame):
         self.date = start_date
         self.command = command
 
-        self.month_substract_button = customtkinter.CTkButton(self, text="<", command=self.month_subtract, width=20)
-        self.month_substract_button.grid(row=0, column=0, padx=(3, 0), pady=3)
+        self.month_subtract_button = customtkinter.CTkButton(self, text="<", command=self.month_subtract, width=20)
+        self.month_subtract_button.grid(row=0, column=0, padx=(3, 0), pady=3)
         self.month = customtkinter.CTkEntry(self, width=80, height=10, border_width=0)
         self.month.grid(row=0, column=1, padx=3, pady=3)
         self.month_add_button = customtkinter.CTkButton(self, text=">", command=self.month_add, width=20)
         self.month_add_button.grid(row=0, column=2, padx=(0, 3), pady=3)
 
-        self.year_substract_button = customtkinter.CTkButton(self, text="<", command=self.year_subtract, width=20)
-        self.year_substract_button.grid(row=0, column=3, padx=(3, 0), pady=3)
+        self.year_subtract_button = customtkinter.CTkButton(self, text="<", command=self.year_subtract, width=20)
+        self.year_subtract_button.grid(row=0, column=3, padx=(3, 0), pady=3)
         self.year = customtkinter.CTkEntry(self, width=80, height=10, border_width=0)
         self.year.grid(row=0, column=4, padx=3, pady=3)
         self.year_add_button = customtkinter.CTkButton(self, text=">", command=self.year_add, width=20)
@@ -110,7 +110,7 @@ class YearMonthPicker(customtkinter.CTkFrame):
 
     def month_subtract(self):
         """
-        On month substract
+        On month subtract
         :return: None
         """
         self.date = self.date - relativedelta(months=1)
@@ -128,7 +128,7 @@ class YearMonthPicker(customtkinter.CTkFrame):
 
     def year_subtract(self):
         """
-        On year substract
+        On year subtract
         :return: None
         """
         self.date = self.date - relativedelta(years=1)
