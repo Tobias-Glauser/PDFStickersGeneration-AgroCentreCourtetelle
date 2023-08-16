@@ -6,10 +6,17 @@ import calendar as cal
 
 
 class DatePicker:
+    """
+    Class to pick a date with a calendar (Static class)
+    """
     value = None
 
     @staticmethod
     def get_date():
+        """
+        Get a date with a calendar
+        :return: The date selected
+        """
         date_picker_window = DatePickerTopLevel(command=DatePicker.set_value)
         date_picker_window.wait_window()
         value = DatePicker.value
@@ -18,13 +25,25 @@ class DatePicker:
 
     @staticmethod
     def set_value(value):
+        """
+        Used to set the date selected
+        :param value: The date selected
+        :return: None
+        """
         DatePicker.value = value
 
 
 class DatePickerTopLevel(customtkinter.CTkToplevel):
-
+    """
+    Class to represent a calendar to pick a date
+    """
     def __init__(self, command=None, **kwargs):
-
+        """
+        DatePickerTopLevel constructor
+        :param command: Command to execute when a date is selected
+        :param kwargs: Keyword arguments for the customtkinter.CTkToplevel class
+        :return: None
+        """
         super().__init__(**kwargs)
         self.title("Sélectionner une date")
         self.after(250, lambda: self.iconbitmap("UI/assets/icon.ico"))
@@ -47,13 +66,28 @@ class DatePickerTopLevel(customtkinter.CTkToplevel):
         self.grab_set()
 
     def command_callback(self, date):
+        """
+        Callback for the day picker when a date is selected
+        Executes the command if it is provided
+        :param date: Selected date
+        :return: None
+        """
         self.command(date)
         self.destroy()
 
 
 class YearMonthPicker(customtkinter.CTkFrame):
-
+    """
+    Class to represent a year and month picker
+    """
     def __init__(self, parent, start_date: date_lib = date_lib.today(), command=None, **kwargs):
+        """
+        YearMonthPicker constructor
+        :param parent: Parent frame
+        :param start_date: Date to start with
+        :param command: Command to execute when the month or year is changed
+        :param kwargs: Keyword arguments for the customtkinter.CTkFrame class
+        """
         super().__init__(parent, **kwargs)
         self.date = start_date
         self.command = command
@@ -75,42 +109,80 @@ class YearMonthPicker(customtkinter.CTkFrame):
         self.update()
 
     def month_subtract(self):
+        """
+        On month substract
+        :return: None
+        """
         self.date = self.date - relativedelta(months=1)
         self.update()
         self.execute_command()
 
     def month_add(self):
+        """
+        On month add
+        :return: None
+        """
         self.date = self.date + relativedelta(months=1)
         self.update()
         self.execute_command()
 
     def year_subtract(self):
+        """
+        On year substract
+        :return: None
+        """
         self.date = self.date - relativedelta(years=1)
         self.update()
         self.execute_command()
 
     def year_add(self):
+        """
+        On year add
+        :return: None
+        """
         self.date = self.date + relativedelta(years=1)
         self.update()
         self.execute_command()
 
     def update(self):
+        """
+        Update the month and year entry fields
+        :return: None
+        """
         self.month.delete(0, "end")
         self.month.insert(0, self.date.strftime("%B"))
         self.year.delete(0, "end")
         self.year.insert(0, self.date.strftime("%Y"))
 
     def get_date(self):
+        """
+        Get the date
+        :return: The date
+        """
         return self.date
 
     def execute_command(self):
+        """
+        Execute the command if it is provided
+        :return: None
+        """
         if self.command is not None:
             self.command(self.get_date())
 
 
 class DayPicker(customtkinter.CTkFrame):
-
+    """
+    Class to represent a day picker with a calendar of the month
+    """
     def __init__(self, parent, date=None, command=None, **kwargs):
+        """
+        DayPicker constructor
+        :param parent: Parent frame
+        :param date: Date to start with
+        :param command: Command to execute when a day is selected
+        :param kwargs: Keyword arguments for the customtkinter.CTkFrame class
+        :return: None
+        """
         super().__init__(parent, **kwargs)
         self.date = None
         self.buttons = []
@@ -122,6 +194,11 @@ class DayPicker(customtkinter.CTkFrame):
         self.update(date)
 
     def update(self, actual_date: date_lib = None):
+        """
+        Update the calendar with the new date
+        :param actual_date: The new date to use
+        :return: None
+        """
         self.date = actual_date
         if actual_date is None:
             self.date = date_lib.today()
