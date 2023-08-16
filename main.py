@@ -9,6 +9,10 @@ from sticker.sticker_type import StickerType
 
 
 def empty_tmp():
+    """
+    Empty the tmp folder
+    :return: None
+    """
     for file in os.scandir(os.getcwd() + "\\tmp"):
         os.remove(file.path)
 
