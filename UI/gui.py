@@ -32,7 +32,7 @@ class App(customtkinter.CTk):
         super().__init__()
         self.button = None
         self.stickers = stickers
-        self.geometry("500x480")
+        self.geometry("500x488")
         self.title("Sticker - AGROCENTRE & KILOMETRE ZERO")
         self.iconbitmap("UI/assets/icon.ico")
         self.thread = None
