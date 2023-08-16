@@ -16,7 +16,7 @@ class DateEntry(customtkinter.CTkFrame):
         :param font: Font of the entry field
         :param width: Width of the entry field
         :param height: Height of the entry field
-        :param kwargs: Keyword arguments for the customtkinter.CTkFrame
+        :param kwargs: Keyword arguments for the customtkinter.CTkFrame class
         """
         super().__init__(parent, width=width, height=height, **kwargs)
 
