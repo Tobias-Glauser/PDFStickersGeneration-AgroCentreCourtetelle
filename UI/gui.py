@@ -181,14 +181,16 @@ class App(customtkinter.CTk):
         progress_bar.grid(row=4, column=0, columnspan=1, padx=10, pady=10, sticky="ew")
         self.update()
         try:
-            sticker_frame.sticker.generate(save_file_path, progress_bar.set_state, progress_bar.destroy, stickers_left=stickers_left, total_stickers=total_stickers)
+            sticker_frame.sticker.generate(save_file_path, progress_bar.set_state, stickers_left=stickers_left, total_stickers=total_stickers)
         except Exception as e:
             if e.args[0] == "Line too long":
                 CTkMessagebox(title="Erreur",
-                              message="Le texte du champ " + e.args[1] + "(" + e.args[2] + ") est trop long pour "
+                              message="Le texte du champ " + e.args[1] + " (" + e.args[2] + ") est trop long pour "
                                                                                            "l'autocollant.",
                               icon="cancel")
+            progress_bar.destroy()
             return False
+        progress_bar.destroy()
         return save_file_path
 
     def set_printer(self, _ignored):

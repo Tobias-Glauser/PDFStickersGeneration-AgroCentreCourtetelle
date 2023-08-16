@@ -32,9 +32,8 @@ class StickerGenerator:
         },
     }
 
-    def __init__(self, state_callback=None, progress_bar_destroy_callback=None):
+    def __init__(self, state_callback=None):
         self.state_callback = state_callback
-        self.progress_bar_destroy_callback = progress_bar_destroy_callback
         StickerGenerator.__generate_fonts_real_sizes()
 
     def generate_stickers(self, sticker, save_file_path, **kwargs):
@@ -112,15 +111,10 @@ class StickerGenerator:
         os.remove(sticker_img_path)
         self.update_state_if_needed(StickerGenProgressBar.StickerProgressBarStates.DONE)
         time.sleep(0.5)
-        self.destroy_progress_bar_if_needed()
 
     def update_state_if_needed(self, state):
         if self.state_callback is not None:
             self.state_callback(state)
-
-    def destroy_progress_bar_if_needed(self):
-        if self.progress_bar_destroy_callback is not None:
-            self.progress_bar_destroy_callback()
 
     @staticmethod
     def create_sticker(sticker):
