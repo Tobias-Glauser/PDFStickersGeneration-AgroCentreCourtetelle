@@ -2,8 +2,6 @@ import os
 import win32print
 import subprocess
 
-from pathlib import Path
-
 
 class Printer:
     """
