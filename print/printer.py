@@ -2,6 +2,8 @@ import os
 import win32print
 import subprocess
 
+from pathlib import Path
+
 
 class Printer:
     """
@@ -11,9 +13,20 @@ class Printer:
         """
         Printer class constructor
         :param printer_name: Name of the printer to use | None for default printer
+        :return: None
         """
-        self.foxit_path = os.getcwd().replace("\\", "\\\\") + "\\\\PDF-XChangeViewerPortable\\\\PDF" \
-                                                              "-XChangeViewerPortable.exe"
+        # check if viewer_path.txt is empty, if not use the path in it, else use the default path
+        viewer_config_file_path = os.path.join(os.getcwd(), "config\\viewer_path.txt")
+        self.viewer_directory = os.getcwd()
+        if os.path.isfile(viewer_config_file_path):
+            with open(viewer_config_file_path, "r") as f:
+                text = f.read()
+                if text != "":
+                    self.viewer_directory = text
+
+        self.viewer_path = self.viewer_directory.replace("\\", "\\\\") + "\\\\PDF-XChangeViewerPortable\\\\PDF" \
+                                                                         "-XChangeViewerPortable.exe"
+
         self.printer_name = None
         self.set_printer(printer_name)
 
@@ -39,7 +52,7 @@ class Printer:
             raise FileNotFoundError("File not found: " + file_path)
 
         script = "\"" + \
-                 self.foxit_path + \
+                 self.viewer_path + \
                  "\" /printto:default=no \"" + \
                  self.printer_name + \
                  "\" \"" + \
